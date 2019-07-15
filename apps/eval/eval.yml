@@ -1,0 +1,22 @@
+_default: !include ${TRAIN_CONFIG}
+
+log_dir: ${ARNOLD_OUTPUT}/eval
+# model: models.searched_network
+# model: models.mobilenet_supernet
+# 'model_kwparams.active_fn': 'nn.Swish'
+# 'model_kwparams.se_ratio': ~
+# 'model_kwparams.block': InvertedResidualChannelsFused
+per_gpu_batch_size: 64  # 1 for perfect evaluation
+use_distributed: True
+
+bn_calibration: True
+bn_calibration_steps: 256
+bn_calibration_per_gpu_batch_size: 512
+
+allreduce_bn: True
+test_only: True
+data_loader_workers: 12
+
+# override part of model params
+'model_kwparams.batch_norm_momentum': 0.01
+'model_kwparams.batch_norm_epsilon': 1.0e-3

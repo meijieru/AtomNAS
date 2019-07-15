@@ -1,3 +1,6 @@
+"""Meters related.
+Modified from https://github.com/JiahuiYu/slimmable_networks/blob/master/utils/meters.py
+"""
 
 
 class Meter(object):
@@ -7,8 +10,8 @@ class Meter(object):
 
     Args:
         name (str): the name of meter
-
     """
+
     def __init__(self, name):
         self.name = name
         self.steps = 0
@@ -30,9 +33,8 @@ class Meter(object):
 
 
 class ScalarMeter(Meter):
-    """ScalarMeter records scalar over steps.
+    """ScalarMeter records scalar over steps."""
 
-    """
     def __init__(self, name):
         super(ScalarMeter, self).__init__(name)
 
@@ -42,7 +44,7 @@ class ScalarMeter(Meter):
 
 
 def flush_scalar_meters(meters, method='avg'):
-    """Docstring for flush_scalar_meters"""
+    """Reduce and flush scalar meters."""
     results = {}
     assert isinstance(meters, dict), "meters should be a dict."
     for name, meter in meters.items():

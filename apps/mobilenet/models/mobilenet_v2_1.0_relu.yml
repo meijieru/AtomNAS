@@ -1,0 +1,3 @@
+_default: !include ./mobilenet_v2_1.0.yml
+
+'active_fn': 'nn.ReLU'

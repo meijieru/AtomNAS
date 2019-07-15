@@ -1,0 +1,19 @@
+# log
+log_interval_detail: 2000
+
+# channel select params, check `utils/prune.py`
+# fallback to do nothing
+prune_params: {
+  method: ~,  # if not 'None', do select
+  bn_prune_filter: ~,  # which part of atoms to search from
+  rho: 0.0,  # weight for l1 regularization loss
+  epoch_free: 0,  # [0, `epoch_free`] without penalty
+  epoch_warmup: 0,  # [`epoch_free`, `epoch_warmup`] gradually increase `rho`
+  scheduler: linear,  # how to do warmup
+  stepwise: False,  # warmup stepwise
+  logging_verbose: False,
+}
+
+# shrink model if xxx FLOPS is pruned, default never shrink for back compatibility
+model_shrink_delta_flops: 1.0e+100
+model_shrink_threshold: 1.0e-3

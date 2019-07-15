@@ -1,3 +1,7 @@
+exp
 logs
 data
 .flake8
+*.bak
+*.pyc
+__pycache__

@@ -1,0 +1,10 @@
+_default: !include ./default_mnas_scheduler.yml
+
+log_dir: ${ARNOLD_OUTPUT}/single_path_nas_final_mnas
+model_kwparams: !include ./models/single_path_nas_final.yml
+per_gpu_batch_size: 128
+use_distributed: True
+
+# override part of model params
+'model_kwparams.batch_norm_momentum': 0.01
+'model_kwparams.batch_norm_epsilon': 1.0e-3

@@ -1,26 +1,46 @@
-"""config utilities for yml file."""
+"""Config utilities for yml file.
+Modified from
+https://github.com/JiahuiYu/slimmable_networks/blob/master/utils/config.py
+"""
+import argparse
 import os
-import sys
+import re
 import yaml
 
 # singletone
 FLAGS = None
+_ENV_EXPAND = {}
+
+
+def nested_set(dic, keys, value, existed=False):
+    for key in keys[:-1]:
+        dic = dic[key]
+    if existed:
+        if keys[-1] not in dic:
+            raise RuntimeError('{} does not exist in the dict'.format(keys[-1]))
+        value = type(dic[keys[-1]])(value)
+    dic[keys[-1]] = value
 
 
 class LoaderMeta(type):
-    """Constructor for supporting `!include`.
-    """
+    """Constructor for supporting `!include` and `!path`."""
+
     def __new__(mcs, __name__, __bases__, __dict__):
         """Add include constructer to class."""
         # register the include constructor on the class
         cls = super().__new__(mcs, __name__, __bases__, __dict__)
         cls.add_constructor('!include', cls.construct_include)
+        cls.add_constructor('!path', cls.path_constructor)
         return cls
 
 
 class Loader(yaml.Loader, metaclass=LoaderMeta):
-    """YAML Loader with `!include` constructor.
+    """YAML Loader with `!include` and `!path` constructor.
+
+    '_default' is reserved for override.
+    'xxx.yyy.zzz' is parsed for overriding.
     """
+
     def __init__(self, stream):
         try:
             self._root = os.path.split(stream.name)[0]
@@ -28,10 +48,13 @@ class Loader(yaml.Loader, metaclass=LoaderMeta):
             self._root = os.path.curdir
         super().__init__(stream)
 
+        path_matcher = re.compile(r'.*\$\{([^}^{]+)\}.*')
+        self.add_implicit_resolver('!path', path_matcher, None)
+
     def construct_include(self, node):
         """Include file referenced at node."""
-        filename = os.path.abspath(
-            os.path.join(self._root, self.construct_scalar(node)))
+        filename_related = os.path.expandvars(self.construct_scalar(node))
+        filename = os.path.abspath(os.path.join(self._root, filename_related))
         extension = os.path.splitext(filename)[1].lstrip('.')
         with open(filename, 'r') as f:
             if extension in ('yaml', 'yml'):
@@ -39,11 +62,27 @@ class Loader(yaml.Loader, metaclass=LoaderMeta):
             else:
                 return ''.join(f.readlines())
 
+    def path_constructor(self, node):
+        src = node.value
+        res = os.path.expandvars(src)
+        _ENV_EXPAND[src] = res
+        return res
+
+    def get_single_data(self, *args, **kwargs):
+        res = super(Loader, self).get_single_data(*args, **kwargs)
+        default = res.pop('_default', {})
+        default.update(res)
+        for key, val in list(default.items()):
+            keys = key.split('.')
+            if len(keys) != 1:
+                default.pop(key)
+                nested_set(default, keys, val)
+        return default
+
 
 class AttrDict(dict):
-    """Dict as attribute trick.
+    """Dict as attribute trick."""
 
-    """
     def __init__(self, *args, **kwargs):
         super(AttrDict, self).__init__(*args, **kwargs)
         self.__dict__ = self
@@ -58,9 +97,7 @@ class AttrDict(dict):
                     self.__dict__[key] = value
 
     def yaml(self):
-        """Convert object to yaml dict and return.
-
-        """
+        """Convert object to yaml dict and return."""
         yaml_dict = {}
         for key in self.__dict__:
             value = self.__dict__[key]
@@ -79,9 +116,7 @@ class AttrDict(dict):
         return yaml_dict
 
     def __repr__(self):
-        """Print all variables.
-
-        """
+        """Print all variables."""
         ret_str = []
         for key in self.__dict__:
             value = self.__dict__[key]
@@ -141,8 +176,10 @@ class Config(AttrDict):
         try:
             with open(filename, 'r') as f:
                 cfg_dict = yaml.load(f, Loader)
-        except EnvironmentError:
+        except EnvironmentError as e:
             print('Please check the file with name of "%s"', filename)
+            raise e
+        cfg_dict['config_path'] = filename
         super(Config, self).__init__(cfg_dict)
         if verbose:
             print(' pi.cfg '.center(80, '-'))
@@ -151,16 +188,26 @@ class Config(AttrDict):
 
 
 def app():
-    """Load app via stdin from subprocess"""
+    """Load app via stdin from subprocess."""
     global FLAGS
     if FLAGS is None:
-        job_yaml_file = None
-        for arg in sys.argv:
-            if arg.startswith('app:'):
-                job_yaml_file = arg[4:]
-        if job_yaml_file is None:
-            job_yaml_file = sys.stdin.readline()
+        parser = argparse.ArgumentParser()
+        parser.add_argument('cfg', type=str)
+        parser.add_argument('opts', default=None, nargs=argparse.REMAINDER)
+        args = parser.parse_args()
+        if not args.cfg.startswith('app:'):
+            raise RuntimeError('Cfg should start with `app:`')
+        job_yaml_file = args.cfg[4:]
         FLAGS = Config(job_yaml_file)
+        if len(args.opts) % 2 == 1:
+            raise RuntimeError('Override params should be key/val')
+        for key, val in [
+                args.opts[i:i + 2] for i in range(0, len(args.opts), 2)
+        ]:
+            if not key.startswith('--'):
+                raise RuntimeError('Override key should start with `--`')
+            keys = key[len('--'):].split('.')
+            nested_set(FLAGS, keys, val, existed=True)
         return FLAGS
     else:
         return FLAGS

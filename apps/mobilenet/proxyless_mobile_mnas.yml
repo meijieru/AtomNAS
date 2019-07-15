@@ -1,0 +1,10 @@
+_default: !include ./default_mnas_scheduler.yml
+
+log_dir: ${ARNOLD_OUTPUT}/proxyless_mobile_mnas
+model_kwparams: !include ./models/proxyless_mobile.yml
+per_gpu_batch_size: 128
+use_distributed: True
+
+# override part of model params
+'model_kwparams.batch_norm_momentum': 0.01
+'model_kwparams.batch_norm_epsilon': 1.0e-3

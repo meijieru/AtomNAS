@@ -1,0 +1,11 @@
+_default: !include ./atomnas_b.yml
+
+log_dir: ${ARNOLD_OUTPUT}/atomnas_b+
+'model_kwparams.dropout_ratio': 0.28
+'model_kwparams.se_ratio': 0.5
+'model_kwparams.active_fn': 'nn.Swish'
+'model_kwparams.block': InvertedResidualChannelsFused
+
+bn_calibration: True
+bn_calibration_steps: 16
+bn_calibration_per_gpu_batch_size: 256

@@ -1,0 +1,67 @@
+_default: !include ../slimming/slimming_base.yml
+
+# data related, check `utils/dataflow.py`
+dataset: imagenet1k_lmdb  # different dataset, could be one of ['imagenet1k', 'imagenet1k_lmdb']
+data_transforms: imagenet1k_mnas_bicubic  # preprocessing strategy
+data_loader: imagenet1k_basic  # 'imagenet1k_basic' only
+dataset_dir: ${DATA_LMDB}  # user must specify ${DATA_LMDB} environment variable
+data_loader_workers: 62  # number of total workers
+
+# basic info
+image_size: 224
+topk: [1, 5]  # log top-k acc
+num_epochs: 350  # number of total epochs
+
+# optimizer, check `utils/optim.py`
+optimizer: rmsprop
+momentum: 0.9
+alpha: 0.9
+epsilon: 0.001
+eps_inside_sqrt: True
+weight_decay: 1.0e-5
+weight_decay_method: mnas
+
+# lr scheduler, check `utils/optim.py`
+base_lr: 0.016
+base_total_batch: 256
+per_gpu_batch_size: 128
+lr_scheduler: exp_decaying
+lr_stepwise: False
+exp_decaying_lr_gamma: 0.97
+exp_decay_epoch_interval: 2.4
+
+# label smoothing, check `utils/optim.py`
+label_smoothing: 0.1
+
+# exponential moving average for model var, check `utils/optim.py`
+moving_average_decay: 0.9999
+moving_average_decay_adjust: True
+moving_average_decay_base_batch: 4096
+
+# model profiling
+profiling: [gpu]  # on GPU only
+
+# log
+log_interval: 100  # log every xxx iterations
+
+# pretrain, resume, test_only
+pretrained: ''
+resume: ''
+test_only: False
+
+# other
+random_seed: 1995
+reset_parameters: True
+reset_param_method: mnas
+model: models.mobilenet_supernet
+
+# bn calibration
+bn_calibration: False
+bn_calibration_steps: ~
+bn_calibration_per_gpu_batch_size: 256
+
+# must override
+use_distributed: False  # whether to use distributed training
+allreduce_bn: False  # whether to sync BN'statistics every iteration
+# model_kwparams: {}  # model's kwargs
+# log_dir: ${ARNOLD_OUTPUT}/exp  # output directory

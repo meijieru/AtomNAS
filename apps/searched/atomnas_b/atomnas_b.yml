@@ -1,0 +1,12 @@
+_default: !include ../../mobilenet/default_mnas_scheduler.yml
+
+log_dir: ${ARNOLD_OUTPUT}/atomnas_b_retrain
+model: models.searched_network
+model_kwparams: !include ../models/atomnas_b.yml
+per_gpu_batch_size: 128
+use_distributed: True
+
+# override part of model params
+'model_kwparams.batch_norm_momentum': 0.01
+'model_kwparams.batch_norm_epsilon': 1.0e-3
+'model_kwparams.dropout_ratio': 0.28

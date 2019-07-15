@@ -1,0 +1,11 @@
+# load template
+_default: !include ./default_mnas_scheduler.yml
+
+log_dir: ${ARNOLD_OUTPUT}/mobiletnet_v2_mnas
+model_kwparams: !include ./models/mobilenet_v2_1.0_relu.yml
+per_gpu_batch_size: 128
+use_distributed: True
+
+# override part of model params
+'model_kwparams.batch_norm_momentum': 0.01
+'model_kwparams.batch_norm_epsilon': 1.0e-3

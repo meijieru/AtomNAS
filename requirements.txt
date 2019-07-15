@@ -1,0 +1,7 @@
+torch>=1.0
+torchvision>=0.3
+pyyaml>=3.13
+lmdb
+pyarrow
+pillow-simd
+tqdm

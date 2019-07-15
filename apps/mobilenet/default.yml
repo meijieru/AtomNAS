@@ -1,0 +1,60 @@
+_default: !include ../slimming/slimming_base.yml
+
+# data
+dataset: imagenet1k_lmdb
+data_transforms: imagenet1k_mobile
+data_loader: imagenet1k_basic
+dataset_dir: ${DATA_LMDB}
+data_loader_workers: 62
+
+# info
+image_size: 224
+topk: [1, 5]
+num_epochs: 250
+
+# optimizer
+optimizer: sgd
+momentum: 0.9
+weight_decay: 0.0001
+weight_decay_method: slimmable
+nesterov: True
+
+# lr
+base_lr: 0.5
+base_total_batch: 1024
+per_gpu_batch_size: 128
+lr_scheduler: linear_decaying
+
+# label smoothing
+label_smoothing: 0.0
+
+# exponential moving average for model var
+moving_average_decay: 0.0
+moving_average_decay_base_batch: ~
+
+# model profiling
+profiling: [gpu]
+
+# log
+log_interval: 100
+
+# pretrain, resume, test_only
+pretrained: ''
+resume: ''
+test_only: False
+
+# other
+random_seed: 1995
+reset_parameters: True
+reset_param_method: slimmable
+model: models.mobilenet_supernet
+
+bn_calibration: False
+bn_calibration_steps: ~
+bn_calibration_per_gpu_batch_size: 256
+
+# must override
+use_distributed: False
+allreduce_bn: False
+# model_kwparams: {}
+# log_dir: ${ARNOLD_OUTPUT}/exp
