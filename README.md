@@ -18,7 +18,7 @@ If everything is OK, you should get similar results.
 
 1. Requirements
     - python3, pytorch 1.1+, torchvision 0.3+, pyyaml 3.13, lmdb, pyarrow, pillow (pillow-simd recommanded).
-    - Prepare ImageNet-1k data following pytorch [example](https://github.com/pytorch/examples/tree/master/imagenet).
+    - Prepare ImageNet data following pytorch [example](https://github.com/pytorch/examples/tree/master/imagenet).
     - Optional: Generate lmdb dataset by `utils/lmdb_dataset.py`.
 
 1. Miscellaneous
