@@ -1,0 +1,28 @@
+_default: !include ../../mobilenet/default_mnas_scheduler.yml
+
+log_dir: ${ARNOLD_OUTPUT}/supernet_single_path_nas_slimming_1e-4_warmup25_mnas_calib256
+model: models.mobilenet_supernet
+model_kwparams: !include ../../mobilenet/models/fix_first/supernet_single_path_nas_relu.yml
+per_gpu_batch_size: 64
+prune_params: {
+  method: network_slimming,
+  bn_prune_filter: expansion_only_skip_expand1,
+  rho: 1.0e-4,
+  epoch_free: 0,
+  epoch_warmup: 25,
+  scheduler: linear,
+  stepwise: True,
+  logging_verbose: False
+}
+use_distributed: True
+allreduce_bn: False
+
+model_shrink_threshold: 1.0e-3
+model_shrink_delta_flops: 1.0e+6
+bn_calibration: True
+bn_calibration_steps: 16
+bn_calibration_per_gpu_batch_size: 256
+
+# override part of model params
+'model_kwparams.batch_norm_momentum': 0.01
+'model_kwparams.batch_norm_epsilon': 1.0e-3

@@ -1,0 +1,3 @@
+_default: !include ./supernet_single_path_nas.yml
+
+'active_fn': 'nn.ReLU'
