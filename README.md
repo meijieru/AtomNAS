@@ -1,6 +1,6 @@
 # AtomNAS: Fine-Grained End-to-End Neural Architecture Search
 
-This is the codebase (including search) for ICLR 2019 submission [AtomNAS: Fine-Grained End-to-End Neural Architecture Search](https://openreview.net/forum?id=BylQSxHFwr).
+This is the codebase (including search) for ICLR 2020 submission [AtomNAS: Fine-Grained End-to-End Neural Architecture Search](https://openreview.net/forum?id=BylQSxHFwr).
 
 The network configs for AtomNAS-A/B/C could be checked at `apps/searched/models`, where a list within `inverted_residual_setting` corresponce to `[output_channel, num_repeat, stride, kernel_sizes, hidden_dims, has_first_pointwise]`.
 
