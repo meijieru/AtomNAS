@@ -4,6 +4,30 @@ This is the codebase (including search) for ICLR 2020 submission [AtomNAS: Fine-
 
 The network configs for AtomNAS-A/B/C could be checked at `apps/searched/models`, where a list within `inverted_residual_setting` corresponce to `[output_channel, num_repeat, stride, kernel_sizes, hidden_dims, has_first_pointwise]`.
 
+
+## Setup
+
+### Distributed Training
+
+Set the following ENV variable:
+```
+$METIS_WORKER_0_HOST: IP address of worker 0
+$METIS_WORKER_0_PORT: Port used for initializing distributed environment
+$METIS_TASK_INDEX: Index of task
+$REMOTE_WORKER_NUM: Number of workers
+$REMOTE_WORKER_GPU: Number of GPUs (NOTE: should exactly match local GPU numbers with `CUDA_VISIBLE_DEVICES `)
+$REMOTE_OUTPUT: Output directory
+```
+
+### Non-Distributed Training (Not Recommend)
+
+Set the following ENV variable:
+```
+$REMOTE_WORKER_GPU: Number of GPUs (NOTE: should exactly match local GPU numbers with `CUDA_VISIBLE_DEVICES `)
+$REMOTE_OUTPUT: Output directory
+```
+
+
 ## Reproduce AtomNAS results
 
 For Table 1
@@ -13,6 +37,7 @@ For Table 1
 - AtomNAS-C: `bash scripts/run.sh apps/slimming/shrink/atomnas_c.yml`
 
 If everything is OK, you should get similar results.
+
 
 ## Related Info
 
@@ -28,6 +53,7 @@ If everything is OK, you should get similar results.
         - Support `_default` key for overloading.
         - Support `xxx.yyy.zzz` for partial overloading.
     - Command: `bash scripts/run.sh {{path_to_yaml_config}}`.
+
 
 ## Acknowledgment
 
