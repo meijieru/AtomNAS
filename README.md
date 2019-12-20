@@ -57,8 +57,7 @@ If everything is OK, you should get similar results.
 
 ## Acknowledgment
 
-This repo benefit from the following projects
-- [slimmable_networks](https://github.com/JiahuiYu/slimmable_networks)
+This repo is based on [slimmable_networks](https://github.com/JiahuiYu/slimmable_networks) and benefits from the following projects
 - [apex](https://github.com/NVIDIA/apex)
 - [Efficient-PyTorch](https://github.com/Lyken17/Efficient-PyTorch)
 
