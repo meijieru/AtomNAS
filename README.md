@@ -2,6 +2,7 @@
 
 Updates
 
+- [Mar 2020] A clean mobilenet-series [implementation](https://github.com/meijieru/yet_another_mobilenet_series) is provided.
 - [Feb 2020] Simplify validation process, released the pretrained models. Conflict with [previous version](https://github.com/meijieru/AtomNAS/tree/anonymous).
 
 ## Overview
