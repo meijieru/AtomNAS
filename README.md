@@ -51,7 +51,7 @@ Pretrained Models could be downloaded from [onedrive](https://1drv.ms/u/s!Alk-ml
 
 For AtomNAS:
 ```bash
-FILE=$(realpath {{log_dir_path}}) checkpoint=ckpt bash scripts/run.sh apps/eval/eval_shrink.yml
+FILE=$(realpath {{log_dir_path}}) checkpoint=ckpt ATOMNAS_VAL=True bash scripts/run.sh apps/eval/eval_shrink.yml
 ```
 
 For AtomNAS+:
