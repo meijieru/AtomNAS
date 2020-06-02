@@ -103,7 +103,7 @@ If you find this work or code is helpful in your research, please cite:
 ```
 @inproceedings{
     mei2020atomnas,
-    title={Atom{\{}NAS{\}}: Fine-Grained End-to-End Neural Architecture Search},
+    title={Atom{NAS}: Fine-Grained End-to-End Neural Architecture Search},
     author={Jieru Mei and Yingwei Li and Xiaochen Lian and Xiaojie Jin and Linjie Yang and Alan Yuille and Jianchao Yang},
     booktitle={International Conference on Learning Representations},
     year={2020},
